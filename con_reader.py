@@ -2,12 +2,13 @@ from utils import get_logger
 from copy import deepcopy
 import numpy as np
 
-logger = get_logger(__name__)
 
+logger = get_logger(__name__)
 
 class CONreaderVM:
 
     def __init__(self, file_name):
+        
         """
         Reads in a con file and saves the curves grouped according to its corresponding slice, frame and place.
         Finds the tags necessary to calculate the volume metrics.
@@ -24,7 +25,7 @@ class CONreaderVM:
             'Image_resolution=',
             'Slicethickness=',
             'Patient_weight=',
-            'Patient_height',
+            'Patient_height=',
             'Study_description=',
             'Patient_gender='
         ]
@@ -191,3 +192,10 @@ class CONreaderVM:
         gender = self.volume_data['Patient_gender=']
         
         return (size_h/res_h, size_w/res_w), width, weight, height, gender
+
+
+# In[ ]:
+
+
+
+

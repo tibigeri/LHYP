@@ -1,14 +1,16 @@
 from utils import get_logger
 import pydicom as dicom
+from pydicom.pixel_data_handlers.util import apply_modality_lut #UPDATE
 import numpy as np
 import os
 
-logger = get_logger(__name__)
 
+logger = get_logger(__name__)
 
 class DCMreaderVM:
 
     def __init__(self, folder_name):
+        
         '''
         Reads in the dcm files in a folder which corresponds to a patient.
         It follows carefully the physical slice locations and the frames in a hearth cycle.
@@ -17,9 +19,11 @@ class DCMreaderVM:
         self.num_slices = 0
         self.num_frames = 0
         self.broken = False
+        self.pixel_spacing = 0 # UPDATE: pixel spacing
         images = []
         slice_locations = []
-        file_paths = []        
+        file_paths = [] 
+        
 
         dcm_files = sorted(os.listdir(folder_name))
         dcm_files = [d for d in dcm_files if len(d.split('.')[-2]) < 4]
@@ -31,13 +35,18 @@ class DCMreaderVM:
             if file.find('.dcm') != -1:
                 try:
                     temp_ds = dicom.dcmread(os.path.join(folder_name, file))
-                    images.append(temp_ds.pixel_array)
+                    images.append(apply_modality_lut(temp_ds.pixel_array,temp_ds)) # UPDATE: apply modality lut
                     slice_locations.append(temp_ds.SliceLocation)
                     file_paths.append(os.path.join(folder_name, file))
+                    if self.pixel_spacing == 0:
+                        self.pixel_spacing = temp_ds.PixelSpacing # UPDATE: pixel spacing
+                    
                 except:
                     self.broken = True
-                    return
+                    return    
         
+        
+    
         current_sl = -1
         frames = 0
         increasing = False
@@ -101,3 +110,6 @@ class DCMreaderVM:
 
     def get_dcm_path(self,slice, frame):
         return self.dcm_file_paths[slice, frame]
+    
+    
+
