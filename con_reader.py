@@ -1,5 +1,6 @@
 from utils import get_logger
 from copy import deepcopy
+import codecs
 import numpy as np
 
 
@@ -41,7 +42,7 @@ class CONreaderVM:
             volumerelated_tags[7]: None
         }
 
-        con = open(file_name, 'rt')
+        con = codecs.open(file_name, 'rb', encoding='utf-8')
         
         def find_volumerelated_tags(line):
             for tag in volumerelated_tags:

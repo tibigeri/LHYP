@@ -31,7 +31,11 @@ def get_patient(folder_in, patient):
         # check if dicom is broken, print error if yes
         if dr.broken is not True:
             # get contours from con file
-            cr=CONreaderVM(path + '/sa/contours.con')
+            con_path = path + '/sa/contours.con'
+            if not os.path.exists(con_path):
+                print("No contour file exists: {}".format(path))
+                return None
+            cr=CONreaderVM(con_path)
             contours = cr.get_hierarchical_contours()
             # create temorary variables for contours and dcm images
             tmp_dcm = []
