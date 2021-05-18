@@ -1,0 +1,9 @@
+{ "experiments":
+	[	{
+			"batch_size":64,
+			"num_epochs":100,
+			"k_folds":5,
+			"lr": 0.0001
+		}
+	] 	
+}
